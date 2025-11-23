@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Ovi vs TTS+S2V & Wan2.2 I2V + MMAudio — Verse-Bench</title>
+    <meta
+      name="description"
+      content="Sequential comparison: Ovi vs TTS+S2V (Wan 2.2) and Wan 2.2 I2V + MMAudio on Verse-Bench prompts."
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- Bootstrap -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.2/css/bootstrap.min.css"
+    />
+
+    <style>
+      body {
+        background-color: #f8f9fa;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+          sans-serif;
+      }
+
+      h1,
+      h2,
+      h3,
+      h4 {
+        font-weight: 600;
+      }
+
+      video {
+        width: 100%;
+        height: auto;
+        background-color: #000000;
+        aspect-ratio: 16 / 9;
+        border-radius: 0.25rem;
+      }
+
+      .example-row {
+        background-color: #ffffff;
+        border-radius: 0.75rem;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        padding: 1.25rem 1.5rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .prompt-text {
+        font-size: 0.9rem;
+        line-height: 1.4;
+      }
+
+      .pipeline-label {
+        font-size: 0.85rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+        color: #555;
+        margin-bottom: 0.35rem;
+      }
+
+      .example-id-badge {
+        font-size: 0.8rem;
+        font-weight: 600;
+        padding: 0.15rem 0.5rem;
+        border-radius: 999px;
+        background-color: #e9ecef;
+        color: #495057;
+      }
+
+      .legend-badge {
+        display: inline-block;
+        margin-right: 0.5rem;
+        margin-bottom: 0.25rem;
+      }
+
+      .legend-badge span {
+        font-weight: 600;
+      }
+
+      .card-observation {
+        border-left: 4px solid #6f42c1;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Make the whole page fluid so videos can go wide -->
+    <div class="container-fluid px-3 px-md-4 my-4 my-md-5">
+      <!-- Keep the intro text nicely centered / narrower -->
+      <div class="mx-auto" style="max-width: 1100px;">
+        <!-- Title -->
+        <div class="text-center mb-4">
+          <h1 class="h3 h2-md">
+            Ovi vs TTS+Sound-to-Video (Wan&nbsp;2.2) and Wan&nbsp;2.2
+            Image-to-Video + MMAudio
+          </h1>
+          <p class="text-muted mb-0">
+            205 Evaluation Prompts &mdash; Random 25 Shown
+          </p>
+        </div>
+
+        <!-- Protocol & Viewing Guide -->
+        <section class="mt-4">
+          <h4 class="mt-3">Protocol &amp; Viewing Guide</h4>
+
+          <p>
+            <strong>What’s being compared.</strong>
+            We compare Ovi against two sequential pipelines:
+          </p>
+          <ul>
+            <li>
+              <strong>TTS + Sound-to-Video (S2V)</strong>: speech is
+              synthesized via FishSpeech, then a sound-to-video model from
+              Wan&nbsp;2.2 drives the visuals.
+            </li>
+            <li>
+              <strong>Wan&nbsp;2.2 I2V + MMAudio</strong>: an image-to-video
+              model generates visuals, while MMAudio independently generates
+              audio.
+            </li>
+          </ul>
+
+          <p>
+            <strong>Why this matters.</strong>
+            Ovi’s joint generation enforces tight AV coupling by construction.
+            Sequential pipelines compose disparate subsystems (audio ↔ video),
+            which often yields weaker lip sync, mismatched affect, and limited
+            non-speech acoustics.
+          </p>
+
+          <p>
+            <strong>How to read each row.</strong>
+            Every row corresponds to a single prompt JSON (e.g.,
+            <code>0008.json</code>). The full JSON contents are shown above a
+            strip of three videos:
+            <strong>Ovi</strong>, <strong>S2V</strong>, and
+            <strong>TI2V+MMAudio</strong>.
+          </p>
+
+          <p class="mb-1"><strong>Legend.</strong></p>
+          <p>
+            <span class="legend-badge">
+              <span>Ovi</span> &mdash; joint text+video (Ovi I2V)
+            </span>
+            <span class="legend-badge">
+              <span>S2V</span> &mdash; FishSpeech → Wan&nbsp;2.2 S2V
+            </span>
+            <span class="legend-badge">
+              <span>TI2V + MMAudio</span> &mdash; Wan&nbsp;2.2 I2V → MMAudio
+            </span>
+          </p>
+
+        <li><strong>Qualitative evaluation criteria.</strong> Labelers are presented with a random pair of videos each time, and are asked the three questions below in terms of evaluation criteria. Labelers are asked to select one of the three choices as answer to each question - Left is Better, Right is Better or Cannot Decide. 
+          <ol class="sublist" type="a">
+            <li>Audio quality: Based on your assessment of sound clarity, naturalness, and absence of
+            noise or distortion, which clip demonstrates higher overall audio quality?</li>
+            <li>Video quality: Considering factors such as visual clarity, sharpness, motion smoothness,
+            and absence of visual artifacts, which clip demonstrates higher overall video quality?</li>
+            <li>AV sync: Taking into account how accurately the audio aligns with visible speech move-
+            ments and other relevant visual events, as well as how well the audio content semantically
+            matches the actions, mood, or context of the video, which clip demonstrates better overall
+            audio–video alignment?</li>
+          </ol>
+        </li>
+    
+          <!-- Big highlighted conclusion block -->
+          <div class="card mt-4 card-observation">
+            <div class="card-body">
+              <h5 class="card-title mb-2">
+                <strong>Observation &amp; Conclusion</strong>
+              </h5>
+              <ol class="mb-0">
+                <li>
+                  Ovi consistently exhibits high lip-sync accuracy and coherent emotional alignment
+                  while producing both video and audio jointly. In contrast, the TTS+S2V pipeline
+                  often fails to synchronize speech with the visuals in terms of emotions, body
+                  movements, and overall timing, as seen in <code>0017.json</code>,
+                  <code>0039.json</code>, and <code>0055.json</code>.
+                </li>
+                <li>
+                  MMAudio cannot generate speech, and TTS models cannot naturally generate music or
+                  rich sound effects. As a result, sequential pipelines cannot produce both speech
+                  and non-speech audio within a single coherent video, as illustrated by
+                  <code>0277.json</code>.
+                </li>
+                <li>
+                  Covering both speech/lip-sync scenarios and sound-effects/music scenarios with the
+                  baselines requires two sequential pipelines involving four separate models. Ovi,
+                  by contrast, uses a single unified model, substantially reducing inference
+                  complexity and latency while improving joint AV consistency.
+                </li>
+              </ol>
+            </div>
+          </div>
+
+        </section>
+      </div>
+
+      <!-- Full-width examples -->
+      <section class="mt-5">
+        <h4 class="mb-3">Evaluation Examples (Random 25)</h4>
+        <div id="examples-container"></div>
+      </section>
+    </div>
+
+    <script>
+      // -------- CONFIG --------
+      const BASE_JSON_DIR = "set_1"; // JSONs like set_1/0008.json
+      const BASE_VIDEO_DIR = "top_25"; // Videos like top_25/0008_s2v.mp4
+
+      // Pipelines and filenames:
+      //   Ovi I2V:      NNNN_ovi_i2v.mp4
+      //   S2V:          NNNN_s2v.mp4
+      //   TI2V+MMAudio: NNNN_ti2v.mp4
+      const PIPELINES = [
+        {
+          key: "ovi_i2v",
+          label: "Ovi (joint text+video, I2V)",
+          suffix: "_ovi_i2v.mp4",
+        },
+        {
+          key: "s2v",
+          label: "S2V (FishSpeech \u2192 Wan\u00a02.2 S2V)",
+          suffix: "_s2v.mp4",
+        },
+        {
+          key: "ti2v",
+          label: "TI2V + MMAudio (Wan\u00a02.2 I2V \u2192 MMAudio)",
+          suffix: "_ti2v.mp4",
+        },
+      ];
+
+      // 25 ids inferred from your top_25 listing (4-digit, zero-padded).
+      const EXAMPLE_IDS = [
+        8, 9, 12, 13, 14, 17, 30, 39, 55, 69, 70, 78, 88, 103, 113, 124, 129,
+        159, 225, 259, 266, 286, 292, 295, 277,
+      ];
+
+      const examplesContainer = document.getElementById("examples-container");
+
+      function padId(id) {
+        // 4-digit zero-padding -> "0008"
+        return id.toString().padStart(4, "0");
+      }
+
+      function createExampleRow(idStr, data) {
+        const wrapper = document.createElement("div");
+        wrapper.className = "example-row";
+
+        // header
+        const headerRow = document.createElement("div");
+        headerRow.className =
+          "d-flex justify-content-between align-items-center mb-2";
+
+        const idBadge = document.createElement("span");
+        idBadge.className = "example-id-badge";
+        idBadge.textContent = `Prompt ID: ${idStr}.json`;
+
+        headerRow.appendChild(idBadge);
+        wrapper.appendChild(headerRow);
+
+        // full JSON as pretty text
+        const promptPre = document.createElement("pre");
+        promptPre.className = "prompt-text mb-3 bg-light p-2 rounded";
+        promptPre.textContent = JSON.stringify(data, null, 2);
+        wrapper.appendChild(promptPre);
+
+        // videos row
+        const vidsRow = document.createElement("div");
+        vidsRow.className = "row";
+
+        PIPELINES.forEach((p) => {
+          const col = document.createElement("div");
+          col.className = "col-md-4 mb-3";
+
+          const label = document.createElement("div");
+          label.className = "pipeline-label";
+          label.textContent = p.label;
+
+          const video = document.createElement("video");
+          video.setAttribute("controls", "controls");
+          video.setAttribute("playsinline", "playsinline");
+          video.setAttribute("preload", "metadata");
+
+          const src = document.createElement("source");
+          src.src = `${BASE_VIDEO_DIR}/${idStr}${p.suffix}`;
+          src.type = "video/mp4";
+
+          video.appendChild(src);
+
+          const fallback = document.createElement("div");
+          fallback.className = "text-muted";
+          fallback.style.fontSize = "0.8rem";
+          fallback.style.display = "none";
+          fallback.textContent = "Video not available.";
+
+          video.onerror = () => {
+            video.style.display = "none";
+            fallback.style.display = "block";
+          };
+
+          col.appendChild(label);
+          col.appendChild(video);
+          col.appendChild(fallback);
+          vidsRow.appendChild(col);
+        });
+
+        wrapper.appendChild(vidsRow);
+        return wrapper;
+      }
+
+      async function loadExample(id) {
+        const idStr = padId(id);
+        const jsonUrl = `${BASE_JSON_DIR}/${idStr}.json`;
+
+        try {
+          const resp = await fetch(jsonUrl);
+          if (!resp.ok) {
+            throw new Error(`HTTP ${resp.status}`);
+          }
+          const data = await resp.json();
+          const row = createExampleRow(idStr, data);
+          examplesContainer.appendChild(row);
+        } catch (err) {
+          console.error(`Failed to load ${jsonUrl}:`, err);
+          const errDiv = document.createElement("div");
+          errDiv.className = "example-row";
+          errDiv.innerHTML = `<p class="mb-0 text-danger">Failed to load <code>${jsonUrl}</code> (${err.message}).</p>`;
+          examplesContainer.appendChild(errDiv);
+        }
+      }
+
+      async function init() {
+        for (const id of EXAMPLE_IDS) {
+          await loadExample(id);
+        }
+      }
+
+      init();
+    </script>
+  </body>
+</html>
+
